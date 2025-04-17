@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [ main ]
 
-permissions:
-  pull-requests: write
-  
 jobs:
   test-postgres:
     name: Test with PostgreSQL
