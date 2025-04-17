@@ -6,12 +6,16 @@ use App\Filament\Resources\CategoryResource\Pages;
 use App\Filament\Resources\CategoryResource\RelationManagers;
 use App\Models\Category;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Str;
 
 class CategoryResource extends Resource
 {
@@ -23,7 +27,24 @@ class CategoryResource extends Resource
     {
         return $form
             ->schema([
-                //
+
+                Forms\Components\TextInput::make('name')->required()
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(function (Set $set, $state) {
+                        $set('slug', Str::slug($state));
+                    }),
+
+                Forms\Components\TextInput::make('slug')
+                    ->required()
+                    ->unique(ignoreRecord: true)
+                    ->maxLength(255)
+                    ->disabledOn('edit'),
+
+                FileUpload::make('image_path')
+                    ->label('Image')
+                    ->image()
+                    ->avatar()
+                    ->imageEditor()
             ]);
     }
 
@@ -31,13 +52,17 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('slug'),
+                ImageColumn::make('image_path'),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
