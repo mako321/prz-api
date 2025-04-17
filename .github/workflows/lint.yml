@@ -20,6 +20,9 @@ jobs:
           extensions: json, dom, curl, libxml, mbstring
           coverage: none
 
+      - name: Install Composer dependencies
+        run: composer install
+
       - name: Run Pint
         run: ./vendor/bin/pint --test
 
