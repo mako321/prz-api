@@ -54,6 +54,9 @@ jobs:
       - name: Run migrations
         run: php artisan migrate --force
 
+      - name: Generate app key
+        run: php artisan key:generate
+
       - name: Run PHPUnit (PostgreSQL)
         run: php artisan test
 
@@ -81,6 +84,9 @@ jobs:
         run: |
           echo "DB_CONNECTION=sqlite" >> .env
           echo "DB_DATABASE=:memory:" >> .env
+
+      - name: Generate app key
+        run: php artisan key:generate
 
       - name: Run PHPUnit (SQLite)
         run: php artisan test --testsuite=Feature
