@@ -51,9 +51,6 @@ jobs:
           echo "DB_USERNAME=sail" >> .env
           echo "DB_PASSWORD=password" >> .env
 
-      - name: Run migrations
-        run: php artisan migrate --force
-
       - name: Generate app key
         run: php artisan key:generate
 
